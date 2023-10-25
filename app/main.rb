@@ -2,13 +2,25 @@ ABSOLUTE_Y = 215
 OBSTACLE_WIDTHS = [10, 20, 30]
 
 def tick args
+  args.state.start ||= false
+
+  if args.state.start
+    paint args
+  else
+    display_new_game_screen args
+  end
+end
+
+def paint(args)
   args.state.sagar  ||= {x: 50, y: ABSOLUTE_Y, h: 40, w: 10, r: 255, g: 51, b: 51}
   args.state.obstacle ||= {x: 500, y: ABSOLUTE_Y, h: 30, w: 10}
   args.state.ground ||= {x: 0, y: 200, h: 10, w: args.grid.w}
   args.outputs.solids << [args.state.sagar, args.state.ground]
   args.outputs.solids << [args.state.obstacle]
 
-  unless args.state.obstacle.intersect_rect? args.state.sagar
+  if game_over? args
+    puts 'hello'
+  else
     args.state.obstacle.x -= 3
 
     if args.state.obstacle.x.negative?
@@ -27,6 +39,22 @@ def tick args
   end
 
   add_debugger args
+end
+
+def game_over?(args)
+  args.state.obstacle.intersect_rect? args.state.sagar
+end
+
+def display_new_game_screen(args)
+  args.outputs.labels << {x: 500, y: 500, size_enum: 3, text: 'Run Sagar Run'}
+  args.outputs.lines  << {x: 500, y: 470, h: 0, w: 160}
+  #args.outputs.labels << {x: 430, y: 450, text: 'Jump over obstacles using the up arrow.'}
+  #args.outputs.labels << {x: 430, y: 420, text: 'Eat biscuits to increase score.'}
+  args.outputs.labels << {x: 450, y: 450, text: 'Press ↑ (up arrow) to start.'}
+
+  if args.inputs.up
+    args.state.start = true
+  end
 end
 
 def add_debugger args
