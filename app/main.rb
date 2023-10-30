@@ -21,24 +21,31 @@ def paint(args)
   if game_over? args
     puts 'hello'
   else
-    args.state.obstacle.x -= 3
-
-    if args.state.obstacle.x.negative?
-      args.state.obstacle.x = 500
-    end
-
-    if args.state.sagar.y <= ABSOLUTE_Y
-      if args.inputs.keyboard.up
-        args.state.sagar.y += 80
-      end
-    end
-
-    if args.state.sagar.y > ABSOLUTE_Y
-      args.state.sagar.y -= 1.5
-    end
+    handle_player_movement   args
+    handle_obstacle_creation args
   end
 
   add_debugger args
+end
+
+def handle_obstacle_creation(args)
+  args.state.obstacle.x -= 3
+
+  if args.state.obstacle.x.negative?
+    args.state.obstacle.x = 500
+  end
+end
+
+def handle_player_movement(args)
+  if args.state.sagar.y <= ABSOLUTE_Y
+    if args.inputs.keyboard.up
+      args.state.sagar.y += 80
+    end
+  end
+
+  if args.state.sagar.y > ABSOLUTE_Y
+    args.state.sagar.y -= 1.5
+  end
 end
 
 def game_over?(args)
