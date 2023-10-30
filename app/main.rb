@@ -19,7 +19,10 @@ def paint(args)
   args.outputs.solids << [args.state.obstacle]
 
   if game_over? args
-    puts 'hello'
+    args.outputs.labels << {x: 500, y: 500, text: 'Press Enter to restart'}
+    if args.inputs.keyboard.enter
+      $gtk.reset_next_tick
+    end
   else
     handle_player_movement   args
     handle_obstacle_creation args
@@ -68,5 +71,4 @@ def add_debugger args
   args.outputs.debug << { x: 400, y: 400, text: "Obstacle x value is: #{args.state.obstacle.x}" }.label!
   args.outputs.debug << { x: 400, y: 500, text: "Sagar's y value is: #{args.state.sagar.y}" }.label!
 end
-
 $gtk.reset
